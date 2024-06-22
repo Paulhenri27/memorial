@@ -1,0 +1,259 @@
+.stories-page {
+  display: flex;
+  justify-content: center;
+  background-color: #f5ece3; /* Light brown background for the sides */
+}
+
+.stories-main {
+  display: flex;
+  background-color: #fff; /* White background for the central content */
+  padding: 30px;
+  max-width: 1150px;
+  width: 100%;
+}
+
+.stories-container {
+  flex: 1; /* Take up the remaining space */
+  margin-right: 40px;
+}
+
+.stories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5ece3;
+  margin-right: 25px;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 2px solid #4a2c2a; /* Thicker, darker border */
+}
+
+.stories-header h2 {
+  font-size: 18px; /* Adjust font size */
+  color: #4a2c2a;
+  margin: 0; /* Remove default margin */
+}
+
+.stories-header .btn {
+  background-color: #fff;
+  color: #4a2c2a;
+  border: 2px solid #4a2c2a; /* Thicker border */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stories-header .btn:hover {
+  background-color: #f5ece3;
+}
+
+.stories-header .btn .faPen {
+  margin-right: 5px; /* Add some space between the icon and text */
+}
+
+.stories {
+  background-color: #fff;
+  width: 100%;
+  max-width: 860px;
+}
+
+.stories ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.stories ul li {
+  background-color: #f5ece3;
+  padding: 20px; /* Increase padding */
+  border-radius: 10px; /* Add border-radius */
+  margin-bottom: 20px; /* Increase margin-bottom */
+  position: relative; /* To position the "NEW" label */
+  white-space: pre-wrap;
+  margin-right: 20px;
+  word-wrap: break-word; /* Ensure words wrap to the next line */
+}
+
+.stories ul li .story-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+  font-size: 14px; /* Adjust font size for alignment */
+}
+
+.stories ul li .story-header small, 
+.stories ul li .story-header span {
+  color: #888;
+}
+
+.stories ul li .story-header .date {
+  margin-right: 2px;
+}
+
+.stories ul li .story-header .by {
+  margin-right: 2px;
+}
+
+.stories ul li h3 {
+  font-size: 16px; /* Adjust font size */
+  color: #4a2c2a;
+  font-weight: bold; /* Make the text bold */
+}
+
+.stories ul li p {
+  font-size: 16px;
+  color: #4a2c2a;
+  margin: 10px 20px; /* Add margin to separate paragraphs */
+  max-width: 1000px;
+}
+
+.stories ul li .new-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #d9534f; /* Red background for "NEW" label */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.stories ul li .story-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.stories ul li .story-header small {
+  color: #888;
+  font-size: 15px;
+}
+
+.stories ul li .story-header span {
+  color: #888;
+  font-size: 15px;
+}
+
+.read-more {
+  color: #9c4619;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.story-content {
+  display: block;
+}
+
+.story-content.expanded {
+  display: block;
+}
+
+/* Additional styles for the story icon */
+.stories ul li .story-icon {
+  float: left;
+  margin-right: 10px;
+}
+
+.story-form {
+  background-color: #e8c8b2;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.story-form h2 {
+  font-size: 24px;
+  color: #4a2c2a;
+}
+
+.story-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.story-form form div {
+  margin-bottom: 10px;
+}
+
+.story-form form label {
+  font-size: 16px;
+  color: #4a2c2a;
+  margin-bottom: 5px;
+}
+
+.story-form form input,
+.story-form form textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.story-form form textarea {
+  height: 100px;
+}
+
+.story-form form button {
+  background-color: #4a2c2a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.story-form form button:hover {
+  background-color: #333;
+}
+
+.stories-sidebar {
+  width: 300px; /* Fixed width for the sidebar */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.diaporama-box, .updates-box {
+  background-color: #f5ece3;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.diaporama-box img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.updates-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.updates-box ul li {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #4a2c2a;
+}
+
+.show-more-btn {
+  background-color: #4a2c2a;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  width: 100%;
+}

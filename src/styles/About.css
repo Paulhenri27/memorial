@@ -1,0 +1,410 @@
+.about-page {
+  display: flex;
+  justify-content: center;
+  background-color: #f5ece3; /* Light brown background for the sides */
+}
+
+.about-content-wrapper {
+  display: flex;
+  background-color: #fff; /* White background for the central content */
+  padding: 20px;
+}
+
+.about-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+.about-content {
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.about-content h1 {
+  font-size: 28px;
+  color: #4a2c2a;
+  font-family: 'Georgia', serif;
+  position: relative;
+  padding-left: 50px; /* Adjust padding to align the text */
+  line-height: 1.5; /* Adjust line height */
+}
+
+.about-content h1::before {
+  content: "\201C"; /* Unicode for the opening quote */
+  font-size: 60px; /* Increase font size for the quote */
+  color: #e8c8b2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(-10%); /* Adjust vertical alignment */
+}
+
+.about-content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.about-content ul li {
+  font-size: 18px;
+  color: #4a2c2a;
+  margin-bottom: 10px;
+}
+
+.about-content p {
+  font-size: 16px;
+  color: #4a2c2a;
+  margin-top: 20px;
+}
+
+.tributes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.tributes-header h2 {
+  font-size: 24px;
+  color: #4a2c2a;
+  margin-left: 20px;
+}
+
+.tributes-header .btn {
+  background-color: #fff;
+  color: #4a2c2a;
+  border: 1px solid #4a2c2a;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.tributes-header .btn .pen-icon {
+  margin: 0 5px;
+}
+
+.tributes-header .btn:hover {
+  background-color: #f5ece3;
+}
+
+.tributes {
+  background-color: #fff;
+  width: 100%;
+}
+
+.tributes ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tributes ul li {
+  background-color: #f5ece3;
+  padding: 20px; /* Increase padding */
+  border-radius: 10px; /* Add border-radius */
+  margin-bottom: 20px; /* Increase margin-bottom */
+  position: relative; /* To position the "NEW" label */
+  white-space: pre-wrap;
+  word-wrap: break-word; /* Ensure words wrap to the next line */
+}
+
+.tributes ul li.h3 {
+  font-size: 20px; /* Adjust font size */
+  color: #4a2c2a;
+  font-weight: bold; /* Make the text bold */
+  margin-bottom: 10px;
+}
+
+.tribute-header {
+  display: flex;
+  align-items: center;
+}
+
+.name-date-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.tribute-header small,
+.tribute-header span {
+  color: #888;
+}
+
+.tribute-header .date {
+  margin-right: 2px;
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+
+.tribute-header .by {
+  margin-right: 2px;
+}
+
+.tribute-header .pin-icon {
+  margin-left: auto;
+  color: #d9534f; /* Color for the pin icon */
+}
+
+.tributes ul li p {
+  font-size: 16px;
+  color: #4a2c2a;
+  margin: 10px 0; /* Add margin to separate paragraphs */
+  word-wrap: break-word; /* Ensure words wrap to the next line */
+}
+
+.tributes ul li .new-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #d9534f; /* Red background for "NEW" label */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Additional styles for the tribute icon */
+.tributes ul li .tribute-icon {
+  font-size: 24px;
+}
+
+.tribute-form {
+  background-color: #f5ece3;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin-top: 20px;
+  border: 2px solid #4a2c2a;
+}
+
+.tribute-form h2 {
+  font-size: 24px;
+  color: #4a2c2a;
+}
+
+.tribute-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.tribute-form form div {
+  margin-bottom: 10px;
+}
+
+.tribute-form form input,
+.tribute-form form textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  max-width: 700px;
+  width: 100%;
+}
+
+.tribute-form form textarea {
+  height: 100px;
+}
+
+.tribute-form .icon-selection {
+  display: flex;
+  justify-content: left;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tribute-form .icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tribute-form .icon-wrapper.selected .icon {
+  color: #d9534f;
+}
+
+.tribute-form .icon-wrapper p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #4a2c2a;
+}
+
+.tribute-form form .btn {
+  background-color: #4a2c2a;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  max-width: 725px;
+}
+
+.tribute-form .icon {
+  font-size: 72px; /* Make the icons 3 times bigger */
+  color: #4a2c2a;
+}
+
+.read-more {
+  color: #9c4619;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tribute-content {
+  display: block;
+}
+
+.tribute-content.expanded {
+  display: block;
+}
+
+.about-sidebar {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-left: 20px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.diaporama-box,
+.updates-box {
+  background-color: #f5ece3;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.diaporama-box img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.updates-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.updates-box ul li {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #4a2c2a;
+  display: flex;
+  align-items: center;
+}
+
+.update-icon {
+  margin-left: 8px;
+  font-size: 18px; /* Adjust icon size as needed */
+}
+
+.show-more-btn {
+  background-color: #4a2c2a;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Media Query for screens 1300px and below */
+@media (max-width: 1300px) {
+  .about-sidebar {
+    display: none;
+  }
+
+  .gallery-section,
+  .her-life-section,
+  .recent-stories-section {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .gallery-section h2,
+  .her-life-section h2,
+  .recent-stories-section h2 {
+    font-size: 24px;
+    color: #4a2c2a;
+    margin: 20px 0;
+  }
+
+  .photos {
+    background-color: #fff;
+    width: 100%;
+  }
+
+  .photos ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .photos ul li {
+    width: calc(33.333% - 20px);
+    box-sizing: border-box;
+  }
+
+  .photos ul li img {
+    width: 100%;
+    border-radius: 5px;
+  }
+
+  .her-life-section .life-content {
+    background-color: #f5ece3;
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .recent-stories-section ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .recent-stories-section ul li {
+    background-color: #f5ece3;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .recent-stories-section ul li p {
+    font-size: 16px;
+    color: #4a2c2a;
+    margin: 10px 0;
+  }
+
+  .recent-stories-section .btn {
+    background-color: #4a2c2a;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 10px;
+    width: 100%;
+  }
+}
+
+.not-display {
+  display: none;
+}
