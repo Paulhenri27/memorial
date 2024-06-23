@@ -6,8 +6,12 @@
 
 .about-content-wrapper {
   display: flex;
+  flex-direction: column; /* Add this to make sure child elements stack vertically */
+  align-items: center; /* Add this to center the content horizontally */
   background-color: #fff; /* White background for the central content */
   padding: 20px;
+  width: 100%; /* Ensure the wrapper takes full width */
+  box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .about-container {
@@ -323,7 +327,6 @@
   display: none;
 }
 
-
 .floating-btn {
   position: fixed;
   bottom: 20px;
@@ -357,8 +360,6 @@
   flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
-  max-width: 1310px;
-  margin: 0;
 }
 
 .tribute-form.fullscreen .return-btn {
@@ -370,7 +371,6 @@
   align-self: flex-start;
   margin-bottom: 20px;
 }
-
 
 @media (max-width: 1300px) {
   .about-sidebar {
@@ -484,11 +484,22 @@
 @media (max-width: 1300px) and (min-width: 800px) {
   .tribute-form.fullscreen {
     padding: 0; /* Remove padding to occupy full width */
+    max-width: none; /* Remove max-width to occupy full width */
   }
 }
 
 @media (max-width: 800px) {
   .tribute-form.fullscreen {
     padding: 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .about-content-wrapper {
+    padding: 0; /* Remove padding to ensure full width */
+  }
+
+  .about-container {
+    max-width: none; /* Remove max-width to ensure full width */
   }
 }
