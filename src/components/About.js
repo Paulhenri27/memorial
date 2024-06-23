@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faFireAlt, faLeaf, faFeatherAlt, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import '../styles/About.css';
 
 const About = () => {
-  // const [showForm, setShowForm] = useState(false); // Remove or comment out this line
   const [tributes, setTributes] = useState([]);
   const [name, setName] = useState('');
   const [tribute, setTribute] = useState('');
@@ -14,7 +14,9 @@ const About = () => {
   const [photos, setPhotos] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [stories, setStories] = useState([]);
+  const [storyCount, setStoryCount] = useState(0);
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTributes = async () => {
@@ -46,6 +48,7 @@ const About = () => {
       const storiesList = storiesSnapshot.docs.map(doc => doc.data());
       storiesList.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date
       setStories(storiesList.slice(0, 3)); // Get the last three stories
+      setStoryCount(storiesList.length); // Set the total number of stories
     };
 
     fetchStories();
@@ -79,7 +82,6 @@ const About = () => {
   };
 
   const handleAddTributeClick = () => {
-    // setShowForm(true); // Remove or comment out this line
     formRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -92,6 +94,16 @@ const About = () => {
     const updatedTributes = [...tributes];
     updatedTributes[index].expanded = !updatedTributes[index].expanded;
     setTributes(updatedTributes);
+  };
+
+  const toggleStory = (index) => {
+    const updatedStories = [...stories];
+    updatedStories[index].expanded = !updatedStories[index].expanded;
+    setStories(updatedStories);
+  };
+
+  const handleViewAllStoriesClick = () => {
+    navigate('/stories');
   };
 
   useEffect(() => {
@@ -245,13 +257,22 @@ const About = () => {
             <ul>
               {stories.map((story, index) => (
                 <li key={index}>
-                  <p>{story.date} - {story.name}</p>
-                  <p>{story.story}</p>
-                  <p>{story.testimonial}</p>
+                  <div className="story-header">
+                    <h3>{story.name}</h3>
+                    <small className="date">{formatDate(story.date)}</small>
+                  </div>
+                  <p className="story-content">
+                    {story.story && (story.expanded ? story.story : `${story.story.substring(0, 200)}...`)}
+                    {story.story && story.story.length > 200 && (
+                      <span className="read-more" onClick={() => toggleStory(index)}>
+                        {story.expanded ? ' Show less' : ' Read more'}
+                      </span>
+                    )}
+                  </p>
                 </li>
               ))}
             </ul>
-            <button className="btn show-more-btn">View all 22 stories</button>
+            <button className="btn show-more-btn" onClick={handleViewAllStoriesClick}>View all {storyCount} stories</button>
           </div>
         </div>
         <div className="about-sidebar">
@@ -279,7 +300,3 @@ const About = () => {
 };
 
 export default About;
-
-
-
-

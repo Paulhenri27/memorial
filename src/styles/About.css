@@ -370,19 +370,42 @@
     font-size: 16px;
     color: #4a2c2a;
   }
-
   .recent-stories-section ul {
     list-style-type: none;
     padding: 0;
   }
-
+  
   .recent-stories-section ul li {
     background-color: #f5ece3;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    word-wrap: break-word;
+    padding: 20px; /* Increase padding */
+    border-radius: 10px; /* Add border-radius */
+    margin-bottom: 20px; /* Increase margin-bottom */
+    position: relative; /* To position the "NEW" label */
+    white-space: pre-wrap;
+    word-wrap: break-word; /* Ensure words wrap to the next line */
   }
+  
+  .recent-stories-section ul li h3 {
+    font-size: 20px; /* Adjust font size */
+    color: #4a2c2a;
+    font-weight: bold; /* Make the text bold */
+    margin-bottom: 10px;
+  }
+  
+  .recent-stories-section .read-more {
+    color: #9c4619;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .recent-stories-section .story-content {
+    display: block;
+  }
+  
+  .recent-stories-section .story-content.expanded {
+    display: block;
+  }
+  
 
   .recent-stories-section ul li small {
     display: block;
