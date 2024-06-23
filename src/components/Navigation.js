@@ -85,7 +85,7 @@ const Navigation = () => {
                 to="/auth"
                 className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
               >
-                Sign In
+                Login
               </NavLink>
             </li>
           )}
