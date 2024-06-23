@@ -357,6 +357,7 @@
   flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
+  max-width: 1310px;
   margin: 0;
 }
 
@@ -370,6 +371,7 @@
   margin-bottom: 20px;
 }
 
+
 @media (max-width: 1300px) {
   .about-sidebar {
     display: none;
@@ -377,7 +379,10 @@
   .tribute-form{
     display: none;
   }
-
+  .tribute-form form .btn {
+    background-color: #4a2c2a;
+    max-width: 500px;
+}
   .gallery-section,
   .her-life-section,
   .recent-stories-section {
@@ -474,5 +479,16 @@
     cursor: pointer;
     border-radius: 5px;
     width: 100%;
+  }
+}
+@media (max-width: 1300px) and (min-width: 800px) {
+  .tribute-form.fullscreen {
+    padding: 0; /* Remove padding to occupy full width */
+  }
+}
+
+@media (max-width: 800px) {
+  .tribute-form.fullscreen {
+    padding: 0;
   }
 }
