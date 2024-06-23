@@ -289,6 +289,8 @@
   z-index: 9999;
   display: flex;
   flex-direction: column;
+  max-width: 1300px;
+  margin: 0;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -308,10 +310,16 @@
   .photo-form {
     display: none;
   }
-  .gallery-sidebar {
-    display: none;
+
+  .gallery-page {
+    display: flex;
+    justify-content: center;
+    /* background-color: #f5ece3; */
+    background-color: white;
   }
-  .photo-form {
+
+  
+  .gallery-header .btn {
     display: none;
   }
 }

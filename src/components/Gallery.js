@@ -9,12 +9,13 @@ import '../styles/Gallery.css';
 const Gallery = () => {
   const [photos, setPhotos] = useState([]);
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState('');  // New state for file name
+  const [fileName, setFileName] = useState('');
   const [description, setDescription] = useState('');
   const formRef = useRef(null);
   const fileInputRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showFullscreenForm, setShowFullscreenForm] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -36,7 +37,7 @@ const Gallery = () => {
       return;
     }
     setFile(selectedFile);
-    setFileName(selectedFile.name);  // Set file name in state
+    setFileName(selectedFile.name);
   };
 
   const handleSubmit = async (e) => {
@@ -53,16 +54,16 @@ const Gallery = () => {
       await addDoc(photosCollection, { imageUrl: downloadURL, description });
       setPhotos([{ imageUrl: downloadURL, description }, ...photos]);
       setFile(null);
-      setFileName('');  // Reset file name
+      setFileName('');
       setDescription('');
-      setShowFullscreenForm(false);  // Close the fullscreen form after submission
+      setShowFullscreenForm(false);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
   const handleAddPhotoClick = () => {
-    if (window.innerWidth <= 1300) {
+    if (isSmallScreen) {
       setShowFullscreenForm(true);
     } else {
       formRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -83,26 +84,11 @@ const Gallery = () => {
   useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
-      const photoForm = document.querySelector('.photo-form');
-      const gallerySidebar = document.querySelector('.gallery-sidebar');
-
-      if (photoForm && gallerySidebar) {
-        if (screenWidth <= 1300) {
-          photoForm.style.display = 'none';
-          gallerySidebar.style.display = 'none';
-        } else {
-          photoForm.style.display = 'block';
-          gallerySidebar.style.display = 'flex';
-        }
-      }
+      setIsSmallScreen(screenWidth <= 1300);
     };
 
     window.addEventListener('resize', handleResize);
 
-    // Initial check
-    handleResize();
-
-    // Cleanup listener on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -131,28 +117,47 @@ const Gallery = () => {
               </ul>
             </div>
           </div>
-          <div ref={formRef} className={`photo-form ${showFullscreenForm ? 'fullscreen' : ''}`}>
-            {showFullscreenForm && (
+          {!isSmallScreen && (
+            <div ref={formRef} className="photo-form">
+              <h2>Add Photos</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="file-upload" onClick={handleFileUploadClick}>
+                  <FontAwesomeIcon icon={faUpload} size="2x" />
+                  <label>{fileName || 'Choose file'}</label>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    required
+                    style={{ display: 'none' }}
+                  />
+                </div>
+                <button type="submit" className="btn upload-btn">Upload</button>
+              </form>
+            </div>
+          )}
+          {isSmallScreen && showFullscreenForm && (
+            <div className={`photo-form fullscreen`}>
               <button className="return-btn" onClick={() => setShowFullscreenForm(false)}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </button>
-            )}
-            <h2>Add Photos</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="file-upload" onClick={handleFileUploadClick}>
-                <FontAwesomeIcon icon={faUpload} size="2x" />
-                <label>{fileName || 'Choose file'}</label> {/* Display file name or default text */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  required
-                  style={{ display: 'none' }}
-                />
-              </div>
-              <button type="submit" className="btn upload-btn">Upload</button>
-            </form>
-          </div>
+              <h2>Add Photos</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="file-upload" onClick={handleFileUploadClick}>
+                  <FontAwesomeIcon icon={faUpload} size="2x" />
+                  <label>{fileName || 'Choose file'}</label>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    required
+                    style={{ display: 'none' }}
+                  />
+                </div>
+                <button type="submit" className="btn upload-btn">Upload</button>
+              </form>
+            </div>
+          )}
         </div>
         <div className="gallery-sidebar">
           <div className="diaporama-box">
@@ -175,7 +180,7 @@ const Gallery = () => {
         </div>
       </div>
 
-      {window.innerWidth <= 1300 && (
+      {isSmallScreen && (
         <button className="floating-btn" onClick={handleAddPhotoClick}>
           <FontAwesomeIcon icon={faPen} />
           <span className="btn-text">Add Photo</span>
