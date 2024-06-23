@@ -15,7 +15,7 @@ const Stories = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [expandedStories, setExpandedStories] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [authMessage, setAuthMessage] = useState('');
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -58,9 +58,9 @@ const Stories = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      setShowPopup(true);
+      setAuthMessage('Please log in or sign up to submit a story.');
       setTimeout(() => {
-        setShowPopup(false);
+        setAuthMessage('');
       }, 6000);
       return;
     }
@@ -159,6 +159,7 @@ const Stories = () => {
               />
               <button type="submit" className="btn">Publish</button>
             </form>
+            {authMessage && <p className="auth-message">{authMessage}</p>}
           </div>
         </div>
         <div className="stories-sidebar">
@@ -187,13 +188,9 @@ const Stories = () => {
           <span className="btn-text">Add Story</span>
         </button>
       )}
-      {showPopup && (
-        <div className="popup">
-          <p>Please log in or sign up to submit a story.</p>
-        </div>
-      )}
     </div>
   );
 };
 
 export default Stories;
+

@@ -1,6 +1,7 @@
-*{
+* {
   box-sizing: border-box;
 }
+
 .gallery-page {
   display: flex;
   justify-content: center;
@@ -309,10 +310,10 @@
 }
 
 @media (max-width: 1300px) {
-
   .photos ul li .new-label {
     display: none;
   }
+
   .gallery-sidebar,
   .photo-form {
     display: none;
@@ -321,13 +322,18 @@
   .gallery-page {
     display: flex;
     justify-content: center;
-    /* background-color: #f5ece3; */
     background-color: white;
   }
 
-  
   .gallery-header .btn {
     display: none;
+  }
+}
+
+@media (max-width: 1300px) {
+  .gallery-header .btn {
+    display: block;
+    margin-bottom: 10px;
   }
 }
 
