@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import { db, auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faFeatherAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Stories.css';
@@ -13,6 +14,8 @@ const Stories = () => {
   const [photos, setPhotos] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [expandedStories, setExpandedStories] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -44,8 +47,23 @@ const Stories = () => {
     return () => clearInterval(interval);
   }, [photos.length]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isAuthenticated) {
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 6000);
+      return;
+    }
 
     const currentDate = new Date().toISOString();
 
@@ -168,6 +186,11 @@ const Stories = () => {
           <FontAwesomeIcon icon={faPen} />
           <span className="btn-text">Add Story</span>
         </button>
+      )}
+      {showPopup && (
+        <div className="popup">
+          <p>Please log in or sign up to submit a story.</p>
+        </div>
       )}
     </div>
   );

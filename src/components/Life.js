@@ -36,9 +36,10 @@ const Life = () => {
             <p>* Née le 08 Décembre 1947 à Dschang</p>
             <p>* Décédée le 3 Mai 2024 à Djerba-Tunisie</p>
             <h3>VIE PROFESSIONNELLE</h3>
-            <p>* Hôtesse d'accueil à la Délégation du Tourisme de Garoua</p>
+            <p>* Hôtesse d'accueil et secrétaire à la Délégation du Tourisme de Garoua</p>
             <h3>VIE ASSOCIATIVE</h3>
             <p>* Membre de plusieurs associations</p>
+            <p>* Membre de plusieurs groupes religieux</p>
             <h3>VIE RELIGIEUSE</h3>
             <p>* Chrétienne engagée catholique</p>
             <h3>VIE FAMILIALE</h3>

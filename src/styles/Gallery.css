@@ -336,3 +336,8 @@
     padding: 0;
   }
 }
+
+/* src/styles/Gallery.css */
+.photos ul li.selected {
+  border: 2px solid #d9534f; /* Highlight selected photo */
+}

@@ -1,10 +1,33 @@
-import React from 'react';
+// src/components/Navigation.js
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
 import '../styles/Navigation.css';
 import logo from '../assets/bird-removebg-preview.png';
 import rightImage from '../assets/right-image.jpg';
 
 const Navigation = () => {
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        if (userDoc.exists()) {
+          setIsAdmin(userDoc.data().admin);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <nav className="navbar">
       <div className="navbar-top">
@@ -56,6 +79,16 @@ const Navigation = () => {
               Stories
             </NavLink>
           </li>
+          {!user && (
+            <li>
+              <NavLink
+                to="/auth"
+                className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+              >
+                Sign In
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
@@ -63,4 +96,5 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase/firebase';
+import { collection, addDoc, getDocs, doc, deleteDoc, getDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage, auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload, faPen, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faPen, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Gallery.css';
 
 const Gallery = () => {
@@ -16,16 +17,32 @@ const Gallery = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showFullscreenForm, setShowFullscreenForm] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchPhotos = async () => {
       const photosCollection = collection(db, 'images');
       const photoSnapshot = await getDocs(photosCollection);
-      const photoList = photoSnapshot.docs.map(doc => doc.data());
+      const photoList = photoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setPhotos(photoList);
     };
 
     fetchPhotos();
+  }, []);
+
+  useEffect(() => {
+    const checkAdminStatus = async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          setIsAdmin(userDoc.data().admin);
+        }
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, checkAdminStatus);
+    return () => unsubscribe();
   }, []);
 
   const handleFileChange = (e) => {
@@ -51,8 +68,8 @@ const Gallery = () => {
 
     try {
       const photosCollection = collection(db, 'images');
-      await addDoc(photosCollection, { imageUrl: downloadURL, description });
-      setPhotos([{ imageUrl: downloadURL, description }, ...photos]);
+      const docRef = await addDoc(photosCollection, { imageUrl: downloadURL, description });
+      setPhotos([{ id: docRef.id, imageUrl: downloadURL, description }, ...photos]);
       setFile(null);
       setFileName('');
       setDescription('');
@@ -72,6 +89,34 @@ const Gallery = () => {
 
   const handleFileUploadClick = () => {
     fileInputRef.current.click();
+  };
+
+  const handleDeletePhoto = async () => {
+    if (selectedPhoto) {
+      try {
+        // Extract the filename from the imageUrl
+        const imageUrl = selectedPhoto.imageUrl;
+        const decodedUrl = decodeURIComponent(imageUrl);
+        const fileName = decodedUrl.split('/').pop().split('?')[0];
+
+        // Delete the image from storage
+        const photoRef = ref(storage, `images/${fileName}`);
+        await deleteObject(photoRef);
+
+        // Delete the document from Firestore
+        await deleteDoc(doc(db, 'images', selectedPhoto.id));
+
+        // Remove the photo from the state
+        setPhotos(photos.filter(photo => photo.id !== selectedPhoto.id));
+        setSelectedPhoto(null);
+      } catch (error) {
+        console.error('Error deleting photo:', error);
+      }
+    }
+  };
+
+  const handleSelectPhoto = (photo) => {
+    setSelectedPhoto(photo);
   };
 
   useEffect(() => {
@@ -101,11 +146,20 @@ const Gallery = () => {
               <button className="btn" onClick={handleAddPhotoClick}>
                 Add photos
               </button>
+              {isAdmin && (
+                <button className="btn" onClick={handleDeletePhoto} disabled={!selectedPhoto}>
+                  Delete Photo
+                </button>
+              )}
             </div>
             <div className="photos">
               <ul>
                 {photos.map((photo, index) => (
-                  <li key={index}>
+                  <li
+                    key={index}
+                    className={selectedPhoto?.id === photo.id ? 'selected' : ''}
+                    onClick={() => handleSelectPhoto(photo)}
+                  >
                     <span className="new-label">NEW</span>
                     <img src={photo.imageUrl} alt="Gallery" />
                     <p>{photo.description}</p>
@@ -177,7 +231,7 @@ const Gallery = () => {
         </div>
       </div>
 
-      {isSmallScreen && (
+      {isSmallScreen && isAdmin && (
         <button className="floating-btn" onClick={handleAddPhotoClick}>
           <FontAwesomeIcon icon={faPen} />
           <span className="btn-text">Add Photo</span>
@@ -188,3 +242,4 @@ const Gallery = () => {
 };
 
 export default Gallery;
+
