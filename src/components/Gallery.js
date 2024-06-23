@@ -101,9 +101,6 @@ const Gallery = () => {
               <button className="btn" onClick={handleAddPhotoClick}>
                 Add photos
               </button>
-              <button className="btn">
-                Start slideshow
-              </button>
             </div>
             <div className="photos">
               <ul>
