@@ -302,7 +302,7 @@ const About = () => {
         </div>
         <div className="about-sidebar">
           <div className="diaporama-box">
-            <h3>5 Photos</h3>
+            <h3>Photos</h3>
             {photos.length > 0 && (
               <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
             )}

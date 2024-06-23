@@ -151,6 +151,7 @@
 .stories ul li .story-icon {
   float: left;
   margin-right: 10px;
+  display: none;
 }
 
 .story-form {
