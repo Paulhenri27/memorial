@@ -1,3 +1,6 @@
+*{
+  box-sizing: border-box;
+}
 .gallery-page {
   display: flex;
   justify-content: center;
@@ -306,6 +309,10 @@
 }
 
 @media (max-width: 1300px) {
+
+  .photos ul li .new-label {
+    display: none;
+  }
   .gallery-sidebar,
   .photo-form {
     display: none;
