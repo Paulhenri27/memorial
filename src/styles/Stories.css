@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .stories-page {
   display: flex;
   justify-content: center;
@@ -22,7 +26,6 @@
   justify-content: space-between;
   align-items: center;
   background-color: #f5ece3;
-  margin-right: 25px;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -60,11 +63,15 @@
   background-color: #fff;
   width: 100%;
   max-width: 860px;
+  margin: 0 auto; /* Center the stories section */
 }
 
 .stories ul {
   list-style-type: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the stories */
 }
 
 .stories ul li {
@@ -74,8 +81,10 @@
   margin-bottom: 20px; /* Increase margin-bottom */
   position: relative; /* To position the "NEW" label */
   white-space: pre-wrap;
-  margin-right: 20px;
   word-wrap: break-word; /* Ensure words wrap to the next line */
+  max-width: 100%; /* Ensure it doesn't overflow */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .stories ul li .story-header {
@@ -108,7 +117,7 @@
 .stories ul li p {
   font-size: 16px;
   color: #4a2c2a;
-  margin: 10px 20px; /* Add margin to separate paragraphs */
+  margin: 10px 0; /* Add margin to separate paragraphs */
   max-width: 1000px;
 }
 
@@ -122,23 +131,6 @@
   border-radius: 5px;
   font-size: 12px;
   font-weight: bold;
-}
-
-.stories ul li .story-header {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-
-.stories ul li .story-header small {
-  color: #888;
-  font-size: 15px;
-}
-
-.stories ul li .story-header span {
-  color: #888;
-  font-size: 15px;
 }
 
 .read-more {
@@ -165,8 +157,9 @@
   background-color: #e8c8b2;
   padding: 20px;
   border-radius: 8px;
-  max-width: 800px;
+  max-width: 860px;
   margin-top: 20px;
+  margin: 0 auto; /* Center the form */
 }
 
 .story-form h2 {
@@ -179,16 +172,6 @@
   flex-direction: column;
 }
 
-.story-form form div {
-  margin-bottom: 10px;
-}
-
-.story-form form label {
-  font-size: 16px;
-  color: #4a2c2a;
-  margin-bottom: 5px;
-}
-
 .story-form form input,
 .story-form form textarea {
   padding: 10px;
@@ -196,10 +179,6 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin: 20px 0;
-}
-
-.story-form form textarea {
-  height: 100px;
 }
 
 .story-form form button {
@@ -256,4 +235,88 @@
   font-size: 16px;
   margin-top: 10px;
   width: 100%;
+}
+
+/* Fullscreen form and floating button styles */
+.story-form.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 1310px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.story-form.fullscreen .return-btn {
+  background: none;
+  border: none;
+  color: #4a2c2a;
+  font-size: 20px;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4a2c2a;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.floating-btn .btn-text {
+  margin-left: 10px;
+}
+
+@media (max-width: 1300px) {
+  .stories-sidebar {
+    display: none;
+  }
+  .stories-header{
+    display: none;
+  }
+
+  .story-form {
+    display: none;
+  }
+
+  .stories-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 850px) {
+  .stories-page {
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  .stories-main {
+    padding: 0;
+    max-width: 100%;
+    flex-direction: column;
+  }
+
+  .stories-container {
+    margin-right: 0;
+    max-width: 100%;
+  }
 }

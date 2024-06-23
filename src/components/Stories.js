@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faFeatherAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faFeatherAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Stories.css';
 
 const Stories = () => {
@@ -12,6 +12,7 @@ const Stories = () => {
   const [story, setStory] = useState('');
   const [photos, setPhotos] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [expandedStories, setExpandedStories] = useState([]);
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -54,17 +55,19 @@ const Stories = () => {
       setStories([{ name, story, date: currentDate }, ...stories]);
       setName('');
       setStory('');
+      setShowForm(false); // Close the form after submission
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
   const handleAddStoryClick = () => {
-    setShowForm(true);
-    formRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (window.innerWidth > 1300) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      setShowForm(true);
+    }
   };
-
-  const [expandedStories, setExpandedStories] = useState([]);
 
   const toggleStory = (index) => {
     if (expandedStories.includes(index)) {
@@ -115,7 +118,12 @@ const Stories = () => {
             </ul>
           </div>
 
-          <div ref={formRef} className="story-form">
+          <div ref={formRef} className={`story-form ${showForm && window.innerWidth <= 1300 ? 'fullscreen' : ''}`}>
+            {showForm && window.innerWidth <= 1300 && (
+              <button className="return-btn" onClick={() => setShowForm(false)}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </button>
+            )}
             <h2>Share a story</h2>
             <form onSubmit={handleSubmit}>
               <input
@@ -155,9 +163,14 @@ const Stories = () => {
           </div>
         </div>
       </div>
+      {window.innerWidth <= 1300 && (
+        <button className="floating-btn" onClick={handleAddStoryClick}>
+          <FontAwesomeIcon icon={faPen} />
+          <span className="btn-text">Add Story</span>
+        </button>
+      )}
     </div>
   );
 };
 
 export default Stories;
-
