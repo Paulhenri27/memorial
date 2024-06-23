@@ -6,7 +6,7 @@ import { faPen, faFireAlt, faLeaf, faFeatherAlt, faThumbtack } from '@fortawesom
 import '../styles/About.css';
 
 const About = () => {
-  const [showForm, setShowForm] = useState(false);
+  // const [showForm, setShowForm] = useState(false); // Remove or comment out this line
   const [tributes, setTributes] = useState([]);
   const [name, setName] = useState('');
   const [tribute, setTribute] = useState('');
@@ -79,7 +79,7 @@ const About = () => {
   };
 
   const handleAddTributeClick = () => {
-    setShowForm(true);
+    // setShowForm(true); // Remove or comment out this line
     formRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -101,14 +101,16 @@ const About = () => {
       const herLifeSection = document.querySelector('.her-life-section');
       const recentStoriesSection = document.querySelector('.recent-stories-section');
 
-      if (screenWidth <= 1300) {
-        gallerySection.style.display = 'block';
-        herLifeSection.style.display = 'block';
-        recentStoriesSection.style.display = 'block';
-      } else {
-        gallerySection.style.display = 'none';
-        herLifeSection.style.display = 'none';
-        recentStoriesSection.style.display = 'none';
+      if (gallerySection && herLifeSection && recentStoriesSection) {
+        if (screenWidth <= 1300) {
+          gallerySection.style.display = 'block';
+          herLifeSection.style.display = 'block';
+          recentStoriesSection.style.display = 'block';
+        } else {
+          gallerySection.style.display = 'none';
+          herLifeSection.style.display = 'none';
+          recentStoriesSection.style.display = 'none';
+        }
       }
     };
 
@@ -277,3 +279,7 @@ const About = () => {
 };
 
 export default About;
+
+
+
+
