@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faPen, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Gallery.css';
 
 const Gallery = () => {
@@ -14,6 +14,7 @@ const Gallery = () => {
   const formRef = useRef(null);
   const fileInputRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showFullscreenForm, setShowFullscreenForm] = useState(false);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -54,13 +55,18 @@ const Gallery = () => {
       setFile(null);
       setFileName('');  // Reset file name
       setDescription('');
+      setShowFullscreenForm(false);  // Close the fullscreen form after submission
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
   const handleAddPhotoClick = () => {
-    formRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (window.innerWidth <= 1300) {
+      setShowFullscreenForm(true);
+    } else {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleFileUploadClick = () => {
@@ -73,6 +79,32 @@ const Gallery = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, [photos.length]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      const photoForm = document.querySelector('.photo-form');
+      const gallerySidebar = document.querySelector('.gallery-sidebar');
+
+      if (photoForm && gallerySidebar) {
+        if (screenWidth <= 1300) {
+          photoForm.style.display = 'none';
+          gallerySidebar.style.display = 'none';
+        } else {
+          photoForm.style.display = 'block';
+          gallerySidebar.style.display = 'flex';
+        }
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Initial check
+    handleResize();
+
+    // Cleanup listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="gallery-page">
@@ -99,7 +131,12 @@ const Gallery = () => {
               </ul>
             </div>
           </div>
-          <div ref={formRef} className="photo-form">
+          <div ref={formRef} className={`photo-form ${showFullscreenForm ? 'fullscreen' : ''}`}>
+            {showFullscreenForm && (
+              <button className="return-btn" onClick={() => setShowFullscreenForm(false)}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </button>
+            )}
             <h2>Add Photos</h2>
             <form onSubmit={handleSubmit}>
               <div className="file-upload" onClick={handleFileUploadClick}>
@@ -137,6 +174,13 @@ const Gallery = () => {
           </div>
         </div>
       </div>
+
+      {window.innerWidth <= 1300 && (
+        <button className="floating-btn" onClick={handleAddPhotoClick}>
+          <FontAwesomeIcon icon={faPen} />
+          <span className="btn-text">Add Photo</span>
+        </button>
+      )}
     </div>
   );
 };
