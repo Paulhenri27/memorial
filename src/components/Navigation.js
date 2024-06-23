@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import '../styles/Navigation.css';
-import logo from '../assets/logo.jpeg';
+import logo from '../assets/bird-removebg-preview.png';
 import rightImage from '../assets/right-image.jpg';
 
 const Navigation = () => {
