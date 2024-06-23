@@ -96,18 +96,19 @@ const About = () => {
 
   useEffect(() => {
     const handleResize = () => {
+      const screenWidth = window.innerWidth;
       const gallerySection = document.querySelector('.gallery-section');
       const herLifeSection = document.querySelector('.her-life-section');
       const recentStoriesSection = document.querySelector('.recent-stories-section');
 
-      if (window.innerWidth > 1300) {
-        gallerySection?.classList.add('not-display');
-        herLifeSection?.classList.add('not-display');
-        recentStoriesSection?.classList.add('not-display');
+      if (screenWidth <= 1300) {
+        gallerySection.style.display = 'block';
+        herLifeSection.style.display = 'block';
+        recentStoriesSection.style.display = 'block';
       } else {
-        gallerySection?.classList.remove('not-display');
-        herLifeSection?.classList.remove('not-display');
-        recentStoriesSection?.classList.remove('not-display');
+        gallerySection.style.display = 'none';
+        herLifeSection.style.display = 'none';
+        recentStoriesSection.style.display = 'none';
       }
     };
 

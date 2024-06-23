@@ -1,3 +1,4 @@
+// src/components/Navigation.js
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import '../styles/Navigation.css';
@@ -23,7 +24,7 @@ const Navigation = () => {
       </div>
       <div className="navbar-bottom">
         <ul>
-          <li><NavLink exact to="/" className="nav-link" activeClassName="active">About</NavLink></li>
+          <li><NavLink exact={true.toString()} to="/" className="nav-link" activeClassName="active">Tributes</NavLink></li>
           <li><NavLink to="/life" className="nav-link" activeClassName="active">Life</NavLink></li>
           <li><NavLink to="/gallery" className="nav-link" activeClassName="active">Gallery</NavLink></li>
           <li><NavLink to="/stories" className="nav-link" activeClassName="active">Stories</NavLink></li>
@@ -34,4 +35,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-

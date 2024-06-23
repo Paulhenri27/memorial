@@ -247,12 +247,6 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
-  max-width: 725px;
-}
-
-.tribute-form .icon {
-  font-size: 72px; /* Make the icons 3 times bigger */
-  color: #4a2c2a;
 }
 
 .read-more {
@@ -323,7 +317,12 @@
   width: 100%;
 }
 
-/* Media Query for screens 1300px and below */
+.gallery-section,
+.her-life-section,
+.recent-stories-section {
+  display: none;
+}
+
 @media (max-width: 1300px) {
   .about-sidebar {
     display: none;
@@ -333,7 +332,10 @@
   .her-life-section,
   .recent-stories-section {
     display: block;
-    margin-top: 20px;
+    background-color: #fff; /* White background for the sections */
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0; /* Space between sections */
   }
 
   .gallery-section h2,
@@ -341,12 +343,7 @@
   .recent-stories-section h2 {
     font-size: 24px;
     color: #4a2c2a;
-    margin: 20px 0;
-  }
-
-  .photos {
-    background-color: #fff;
-    width: 100%;
+    margin-bottom: 10px;
   }
 
   .photos ul {
@@ -354,12 +351,11 @@
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
   }
 
   .photos ul li {
-    width: calc(33.333% - 20px);
-    box-sizing: border-box;
+    width: calc(33.333% - 10px);
   }
 
   .photos ul li img {
@@ -367,44 +363,43 @@
     border-radius: 5px;
   }
 
-  .her-life-section .life-content {
-    background-color: #f5ece3;
-    padding: 20px;
-    border-radius: 8px;
+  .life-content {
+    font-size: 16px;
+    color: #4a2c2a;
   }
 
   .recent-stories-section ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
   }
 
   .recent-stories-section ul li {
     background-color: #f5ece3;
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
   }
 
-  .recent-stories-section ul li p {
-    font-size: 16px;
-    color: #4a2c2a;
-    margin: 10px 0;
+  .recent-stories-section ul li small {
+    display: block;
+    margin-bottom: 10px;
+    color: #888;
+  }
+
+  .recent-stories-section ul li a {
+    color: #9c4619;
+    text-decoration: underline;
   }
 
   .recent-stories-section .btn {
     background-color: #4a2c2a;
     color: #fff;
     border: none;
-    padding: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
     width: 100%;
   }
-}
-
-.not-display {
-  display: none;
 }
