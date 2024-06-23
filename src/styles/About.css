@@ -327,6 +327,9 @@
   .about-sidebar {
     display: none;
   }
+  .tribute-form{
+    display: none;
+  }
 
   .gallery-section,
   .her-life-section,

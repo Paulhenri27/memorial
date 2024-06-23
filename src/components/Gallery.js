@@ -4,7 +4,6 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import '../styles/Gallery.css';
 
 const Gallery = () => {
