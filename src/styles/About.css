@@ -569,6 +569,7 @@
   .tribute-form h2 {
     font-size: 24px;
     color: #4a2c2a;
+    margin: 0 10px;
   }
   
   .tribute-form form {
@@ -599,7 +600,7 @@
     display: flex;
     justify-content: left;
     gap: 20px;
-    margin-bottom: 20px;
+    margin: 20px 10px;
   }
   
   .tribute-form .icon-wrapper {
@@ -1071,6 +1072,7 @@
   .tribute-form form {
     display: flex;
     flex-direction: column;
+    margin: 0 10px;
   }
   
   .tribute-form form div {
