@@ -112,3 +112,9 @@
   font-size: 12px;
   font-weight: bold;
 }
+
+@media (max-width: 1300px) {
+  .life-sidebar{
+    display: none;
+  }
+}
