@@ -100,16 +100,14 @@ const About = () => {
       const herLifeSection = document.querySelector('.her-life-section');
       const recentStoriesSection = document.querySelector('.recent-stories-section');
 
-      if (window.innerWidth < 1300) {
-        gallerySection?.classList.remove('not-display');
-        herLifeSection?.classList.remove('not-display');
-        recentStoriesSection?.classList.remove('not-display');
-        console.log("Less than 1300px");
-      } else {
+      if (window.innerWidth > 1300) {
         gallerySection?.classList.add('not-display');
         herLifeSection?.classList.add('not-display');
         recentStoriesSection?.classList.add('not-display');
-
+      } else {
+        gallerySection?.classList.remove('not-display');
+        herLifeSection?.classList.remove('not-display');
+        recentStoriesSection?.classList.remove('not-display');
       }
     };
 
