@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faFireAlt, faLeaf, faFeatherAlt, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faFireAlt, faLeaf, faFeatherAlt, faThumbtack, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../styles/About.css';
 
 const About = () => {
@@ -15,6 +15,7 @@ const About = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [stories, setStories] = useState([]);
   const [storyCount, setStoryCount] = useState(0);
+  const [showFullscreenForm, setShowFullscreenForm] = useState(false);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -76,13 +77,18 @@ const About = () => {
       setName('');
       setTribute('');
       setSelectedIcon('');
+      setShowFullscreenForm(false); // Close the fullscreen form after submission
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
   const handleAddTributeClick = () => {
-    formRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (window.innerWidth <= 1300) {
+      setShowFullscreenForm(true);
+    } else {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const formatDate = (isoString) => {
@@ -185,7 +191,12 @@ const About = () => {
             </ul>
           </div>
 
-          <div ref={formRef} className="tribute-form">
+          <div ref={formRef} className={`tribute-form ${showFullscreenForm ? 'fullscreen' : ''}`}>
+            {showFullscreenForm && (
+              <button className="return-btn" onClick={() => setShowFullscreenForm(false)}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </button>
+            )}
             <h2>Leave a Tribute</h2>
             <div className="icon-selection">
               <div className={`icon-wrapper ${selectedIcon === 'candle' ? 'selected' : ''}`} onClick={() => setSelectedIcon('candle')}>
@@ -295,6 +306,13 @@ const About = () => {
           </div>
         </div>
       </div>
+
+      {window.innerWidth <= 1300 && (
+        <button className="floating-btn" onClick={handleAddTributeClick}>
+          <FontAwesomeIcon icon={faPen} />
+          <span className="btn-text">Add Tribute</span>
+        </button>
+      )}
     </div>
   );
 };
