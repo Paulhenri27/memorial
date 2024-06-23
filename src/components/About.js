@@ -16,6 +16,7 @@ const About = () => {
   const [stories, setStories] = useState([]);
   const [storyCount, setStoryCount] = useState(0);
   const [showFullscreenForm, setShowFullscreenForm] = useState(false);
+  const [lifeExpanded, setLifeExpanded] = useState(false);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -251,15 +252,28 @@ const About = () => {
           <div className="her-life-section">
             <h2>Her Life</h2>
             <div className="life-content">
-              <p>Mme Nguetemo née MANGO Félicité</p>
+              <h2>Mme Nguetemo née MANGO Félicité</h2>
+              <p>June 17 · by FELICITE MANGO VEUVE NGUETEMO</p>
               <p>* Née le 08 Décembre 1947 à Dschang</p>
               <p>* Décédée le 3 Mai 2024 à Djerba-Tunisie</p>
-              <p>VIE PROFESSIONNELLE</p>
+              <h3>VIE PROFESSIONNELLE</h3>
               <p>* Hôtesse d'accueil à la Délégation du Tourisme de Garoua</p>
-              <p>VIE ASSOCIATIVE</p>
+              <h3>VIE ASSOCIATIVE</h3>
               <p>* Membre de plusieurs associations</p>
-              <p>VIE RELIGIEUSE</p>
-              <p>* Chrétienne engagée... read more</p>
+              <h3>VIE RELIGIEUSE</h3>
+              <p>* Chrétienne engagée catholique</p>
+              <h3>VIE FAMILIALE</h3>
+              <p>* Veuve, mère de plusieurs enfants, petits-fils et arrières petits fils.</p>
+              {lifeExpanded ? (
+                <>
+                  <p>* Chrétienne engagée catholique</p>
+                  <h3>VIE FAMILIALE</h3>
+                  <p>* Veuve, mère de plusieurs enfants, petits-fils et arrières petits fils.</p>
+                  <span className="read-more" onClick={() => setLifeExpanded(false)}>Show less</span>
+                </>
+              ) : (
+                <span className="read-more" onClick={() => setLifeExpanded(true)}>Read more</span>
+              )}
             </div>
           </div>
 
