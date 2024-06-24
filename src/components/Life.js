@@ -6,13 +6,19 @@ import '../styles/Life.css';
 const Life = () => {
   const [photos, setPhotos] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [offlineMessage, setOfflineMessage] = useState(false);
 
   useEffect(() => {
     const fetchPhotos = async () => {
-      const photosCollection = collection(db, 'images');
-      const photosSnapshot = await getDocs(photosCollection);
-      const photosList = photosSnapshot.docs.map(doc => doc.data());
-      setPhotos(photosList);
+      try {
+        const photosCollection = collection(db, 'images');
+        const photosSnapshot = await getDocs(photosCollection);
+        const photosList = photosSnapshot.docs.map(doc => doc.data());
+        setPhotos(photosList);
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        setPhotos(null);
+      }
     };
 
     fetchPhotos();
@@ -20,13 +26,31 @@ const Life = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % photos.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % (photos.length || 1));
     }, 3000); // Change image every 3 seconds
     return () => clearInterval(interval);
   }, [photos.length]);
 
+  useEffect(() => {
+    const handleOffline = () => setOfflineMessage(true);
+    const handleOnline = () => setOfflineMessage(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    if (!navigator.onLine) {
+      setOfflineMessage(true);
+    }
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
+  }, []);
+
   return (
     <div className="life-page">
+      {offlineMessage && <div className="offline-message">You are currently offline. Some features may not be available.</div>}
       <div className="life-container">
         <div className="life-content">
           <div className="story">
@@ -49,8 +73,10 @@ const Life = () => {
         <div className="life-sidebar">
           <div className="diaporama-box">
             <h3>Photos</h3>
-            {photos.length > 0 && (
+            {photos.length > 0 && photos[currentSlide] ? (
               <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
+            ) : (
+              <p className="loading-message">Loading slideshow...</p>
             )}
           </div>
           <div className="updates-box">

@@ -19,13 +19,19 @@ const Gallery = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [offlineMessage, setOfflineMessage] = useState(false);
 
   useEffect(() => {
     const fetchPhotos = async () => {
-      const photosCollection = collection(db, 'images');
-      const photoSnapshot = await getDocs(photosCollection);
-      const photoList = photoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setPhotos(photoList);
+      try {
+        const photosCollection = collection(db, 'images');
+        const photoSnapshot = await getDocs(photosCollection);
+        const photoList = photoSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setPhotos(photoList);
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        setPhotos(null);
+      }
     };
 
     fetchPhotos();
@@ -43,6 +49,23 @@ const Gallery = () => {
 
     const unsubscribe = onAuthStateChanged(auth, checkAdminStatus);
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleOffline = () => setOfflineMessage(true);
+    const handleOnline = () => setOfflineMessage(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    if (!navigator.onLine) {
+      setOfflineMessage(true);
+    }
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   const handleFileChange = (e) => {
@@ -94,19 +117,15 @@ const Gallery = () => {
   const handleDeletePhoto = async () => {
     if (selectedPhoto) {
       try {
-        // Extract the filename from the imageUrl
         const imageUrl = selectedPhoto.imageUrl;
         const decodedUrl = decodeURIComponent(imageUrl);
         const fileName = decodedUrl.split('/').pop().split('?')[0];
 
-        // Delete the image from storage
         const photoRef = ref(storage, `images/${fileName}`);
         await deleteObject(photoRef);
 
-        // Delete the document from Firestore
         await deleteDoc(doc(db, 'images', selectedPhoto.id));
 
-        // Remove the photo from the state
         setPhotos(photos.filter(photo => photo.id !== selectedPhoto.id));
         setSelectedPhoto(null);
       } catch (error) {
@@ -121,7 +140,7 @@ const Gallery = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % photos.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % (photos.length || 1));
     }, 3000);
     return () => clearInterval(interval);
   }, [photos.length]);
@@ -139,6 +158,7 @@ const Gallery = () => {
 
   return (
     <div className="gallery-page">
+      {offlineMessage && <div className="offline-message">You are currently offline. Some features may not be available.</div>}
       <div className="gallery-content-wrapper">
         <div className="main-content">
           <div className="gallery-container">
@@ -154,17 +174,21 @@ const Gallery = () => {
             </div>
             <div className="photos">
               <ul>
-                {photos.map((photo, index) => (
-                  <li
-                    key={index}
-                    className={selectedPhoto?.id === photo.id ? 'selected' : ''}
-                    onClick={() => handleSelectPhoto(photo)}
-                  >
-                    <span className="new-label">NEW</span>
-                    <img src={photo.imageUrl} alt="Gallery" />
-                    <p>{photo.description}</p>
-                  </li>
-                ))}
+                {photos.length > 0 ? (
+                  photos.map((photo, index) => (
+                    <li
+                      key={index}
+                      className={selectedPhoto?.id === photo.id ? 'selected' : ''}
+                      onClick={() => handleSelectPhoto(photo)}
+                    >
+                      <span className="new-label">NEW</span>
+                      <img src={photo.imageUrl} alt="Gallery" />
+                      <p>{photo.description}</p>
+                    </li>
+                  ))
+                ) : (
+                  <p className="loading-message">Loading photos...</p>
+                )}
               </ul>
             </div>
           </div>
@@ -213,8 +237,10 @@ const Gallery = () => {
         <div className="gallery-sidebar">
           <div className="diaporama-box">
             <h3>Photos</h3>
-            {photos.length > 0 && (
+            {photos.length > 0 && photos[currentSlide] ? (
               <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
+            ) : (
+              <p className="loading-message">Loading slideshow...</p>
             )}
           </div>
           <div className="updates-box">
@@ -242,4 +268,3 @@ const Gallery = () => {
 };
 
 export default Gallery;
-

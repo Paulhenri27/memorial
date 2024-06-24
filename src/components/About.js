@@ -19,16 +19,22 @@ const About = () => {
   const [showFullscreenForm, setShowFullscreenForm] = useState(false);
   const [lifeExpanded, setLifeExpanded] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
+  const [offlineMessage, setOfflineMessage] = useState(false);
   const formRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTributes = async () => {
-      const tributesCollection = collection(db, 'tributes');
-      const tributeSnapshot = await getDocs(tributesCollection);
-      const tributeList = tributeSnapshot.docs.map(doc => doc.data());
-      tributeList.sort((a, b) => b.pin - a.pin || new Date(b.date) - new Date(a.date)); // Sort by pin status and date
-      setTributes(tributeList);
+      try {
+        const tributesCollection = collection(db, 'tributes');
+        const tributeSnapshot = await getDocs(tributesCollection);
+        const tributeList = tributeSnapshot.docs.map(doc => doc.data());
+        tributeList.sort((a, b) => b.pin - a.pin || new Date(b.date) - new Date(a.date)); // Sort by pin status and date
+        setTributes(tributeList);
+      } catch (error) {
+        console.error('Error fetching tributes:', error);
+        setTributes(null);
+      }
     };
 
     fetchTributes();
@@ -36,10 +42,15 @@ const About = () => {
 
   useEffect(() => {
     const fetchPhotos = async () => {
-      const photosCollection = collection(db, 'images');
-      const photoSnapshot = await getDocs(photosCollection);
-      const photoList = photoSnapshot.docs.map(doc => doc.data());
-      setPhotos(photoList);
+      try {
+        const photosCollection = collection(db, 'images');
+        const photoSnapshot = await getDocs(photosCollection);
+        const photoList = photoSnapshot.docs.map(doc => doc.data());
+        setPhotos(photoList);
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        setPhotos(null);
+      }
     };
 
     fetchPhotos();
@@ -47,12 +58,18 @@ const About = () => {
 
   useEffect(() => {
     const fetchStories = async () => {
-      const storiesCollection = collection(db, 'testimonials');
-      const storiesSnapshot = await getDocs(storiesCollection);
-      const storiesList = storiesSnapshot.docs.map(doc => doc.data());
-      storiesList.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date
-      setStories(storiesList.slice(0, 3)); // Get the last three stories
-      setStoryCount(storiesList.length); // Set the total number of stories
+      try {
+        const storiesCollection = collection(db, 'testimonials');
+        const storiesSnapshot = await getDocs(storiesCollection);
+        const storiesList = storiesSnapshot.docs.map(doc => doc.data());
+        storiesList.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date
+        setStories(storiesList.slice(0, 3)); // Get the last three stories
+        setStoryCount(storiesList.length); // Set the total number of stories
+      } catch (error) {
+        console.error('Error fetching stories:', error);
+        setStories(null);
+        setStoryCount(0);
+      }
     };
 
     fetchStories();
@@ -60,7 +77,7 @@ const About = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % photos.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % (photos.length || 1));
     }, 3000);
     return () => clearInterval(interval);
   }, [photos.length]);
@@ -106,6 +123,23 @@ const About = () => {
 
     const unsubscribe = onAuthStateChanged(auth, checkAdminStatus);
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleOffline = () => setOfflineMessage(true);
+    const handleOnline = () => setOfflineMessage(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    if (!navigator.onLine) {
+      setOfflineMessage(true);
+    }
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
@@ -160,6 +194,7 @@ const About = () => {
 
   return (
     <div className="about-page">
+      {offlineMessage && <div className="offline-message">You are currently offline. Some features may not be available.</div>}
       <div className="about-content-wrapper">
         <div className="about-container">
           <div className="about-content">
@@ -187,26 +222,30 @@ const About = () => {
 
           <div className="tributes">
             <ul>
-              {tributes.map((t, index) => (
-                <li key={index} className={t.pin ? 'pinned-tribute' : ''}>
-                  <div className="tribute-header">
-                    {t.icon && <FontAwesomeIcon icon={t.icon === 'candle' ? faFireAlt : t.icon === 'flower' ? faLeaf : faFeatherAlt} className="tribute-icon" />}
-                    <div className="name-date-container">
-                      <h3>{t.name}</h3>
-                      <small className="date">{formatDate(t.date)}</small>
+              {tributes ? (
+                tributes.map((t, index) => (
+                  <li key={index} className={t.pin ? 'pinned-tribute' : ''}>
+                    <div className="tribute-header">
+                      {t.icon && <FontAwesomeIcon icon={t.icon === 'candle' ? faFireAlt : t.icon === 'flower' ? faLeaf : faFeatherAlt} className="tribute-icon" />}
+                      <div className="name-date-container">
+                        <h3>{t.name}</h3>
+                        <small className="date">{formatDate(t.date)}</small>
+                      </div>
+                      {t.pin && <FontAwesomeIcon icon={faThumbtack} className="pin-icon" />}
                     </div>
-                    {t.pin && <FontAwesomeIcon icon={faThumbtack} className="pin-icon" />}
-                  </div>
-                  <p className="tribute-content">
-                    {t.tribute && (t.expanded ? t.tribute : `${t.tribute.substring(0, 200)}...`)}
-                    {t.tribute && t.tribute.length > 200 && (
-                      <span className="read-more" onClick={() => toggleTribute(index)}>
-                        {t.expanded ? ' Show less' : ' Read more'}
-                      </span>
-                    )}
-                  </p>
-                </li>
-              ))}
+                    <p className="tribute-content">
+                      {t.tribute && (t.expanded ? t.tribute : `${t.tribute.substring(0, 200)}...`)}
+                      {t.tribute && t.tribute.length > 200 && (
+                        <span className="read-more" onClick={() => toggleTribute(index)}>
+                          {t.expanded ? ' Show less' : ' Read more'}
+                        </span>
+                      )}
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <p className="loading-message">Loading tributes...</p>
+              )}
             </ul>
           </div>
 
@@ -260,11 +299,15 @@ const About = () => {
             <h2>Gallery</h2>
             <div className="photos">
               <ul>
-                {photos.map((photo, index) => (
-                  <li key={index}>
-                    <img src={photo.imageUrl} alt="Gallery" />
-                  </li>
-                ))}
+                {photos ? (
+                  photos.map((photo, index) => (
+                    <li key={index}>
+                      <img src={photo.imageUrl} alt="Gallery" />
+                    </li>
+                  ))
+                ) : (
+                  <p className="loading-message">Loading gallery...</p>
+                )}
               </ul>
             </div>
           </div>
@@ -301,22 +344,26 @@ const About = () => {
           <div className="recent-stories-section">
             <h2>Recent Stories</h2>
             <ul>
-              {stories.map((story, index) => (
-                <li key={index}>
-                  <div className="story-header">
-                    <h3>{story.name}</h3>
-                    <small className="date">{formatDate(story.date)}</small>
-                  </div>
-                  <p className="story-content">
-                    {story.story && (story.expanded ? story.story : `${story.story.substring(0, 200)}...`)}
-                    {story.story && story.story.length > 200 && (
-                      <span className="read-more" onClick={() => toggleStory(index)}>
-                        {story.expanded ? ' Show less' : ' Read more'}
-                      </span>
-                    )}
-                  </p>
-                </li>
-              ))}
+              {stories ? (
+                stories.map((story, index) => (
+                  <li key={index}>
+                    <div className="story-header">
+                      <h3>{story.name}</h3>
+                      <small className="date">{formatDate(story.date)}</small>
+                    </div>
+                    <p className="story-content">
+                      {story.story && (story.expanded ? story.story : `${story.story.substring(0, 200)}...`)}
+                      {story.story && story.story.length > 200 && (
+                        <span className="read-more" onClick={() => toggleStory(index)}>
+                          {story.expanded ? ' Show less' : ' Read more'}
+                        </span>
+                      )}
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <p className="loading-message">Loading stories...</p>
+              )}
             </ul>
             <button className="btn show-more-btn" onClick={handleViewAllStoriesClick}>View all {storyCount} stories</button>
           </div>
@@ -324,8 +371,10 @@ const About = () => {
         <div className="about-sidebar">
           <div className="diaporama-box">
             <h3>Photos</h3>
-            {photos.length > 0 && (
+            {photos.length > 0 && photos[currentSlide] ? (
               <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
+            ) : (
+              <p className="loading-message">Loading slideshow...</p>
             )}
           </div>
           <div className="updates-box">
@@ -353,4 +402,3 @@ const About = () => {
 };
 
 export default About;
-

@@ -16,14 +16,20 @@ const Stories = () => {
   const [expandedStories, setExpandedStories] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authMessage, setAuthMessage] = useState('');
+  const [offlineMessage, setOfflineMessage] = useState(false);
   const formRef = useRef(null);
 
   useEffect(() => {
     const fetchStories = async () => {
-      const storiesCollection = collection(db, 'testimonials');
-      const storySnapshot = await getDocs(storiesCollection);
-      const storyList = storySnapshot.docs.map(doc => doc.data());
-      setStories(storyList);
+      try {
+        const storiesCollection = collection(db, 'testimonials');
+        const storySnapshot = await getDocs(storiesCollection);
+        const storyList = storySnapshot.docs.map(doc => doc.data());
+        setStories(storyList);
+      } catch (error) {
+        console.error('Error fetching stories:', error);
+        setStories(null);
+      }
     };
 
     fetchStories();
@@ -31,10 +37,15 @@ const Stories = () => {
 
   useEffect(() => {
     const fetchPhotos = async () => {
-      const photosCollection = collection(db, 'images');
-      const photoSnapshot = await getDocs(photosCollection);
-      const photoList = photoSnapshot.docs.map(doc => doc.data());
-      setPhotos(photoList);
+      try {
+        const photosCollection = collection(db, 'images');
+        const photoSnapshot = await getDocs(photosCollection);
+        const photoList = photoSnapshot.docs.map(doc => doc.data());
+        setPhotos(photoList);
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+        setPhotos(null);
+      }
     };
 
     fetchPhotos();
@@ -42,7 +53,7 @@ const Stories = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % photos.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % (photos.length || 1));
     }, 3000);
     return () => clearInterval(interval);
   }, [photos.length]);
@@ -52,6 +63,23 @@ const Stories = () => {
       setIsAuthenticated(!!user);
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleOffline = () => setOfflineMessage(true);
+    const handleOnline = () => setOfflineMessage(false);
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    if (!navigator.onLine) {
+      setOfflineMessage(true);
+    }
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   const handleSubmit = async (e) => {
@@ -102,6 +130,7 @@ const Stories = () => {
 
   return (
     <div className="stories-page">
+      {offlineMessage && <div className="offline-message">You are currently offline. Some features may not be available.</div>}
       <div className="stories-main">
         <div className="stories-container">
           <div className="stories-header">
@@ -114,25 +143,29 @@ const Stories = () => {
 
           <div className="stories">
             <ul>
-              {stories.map((s, index) => (
-                <li key={index}>
-                  <span className="new-label">NEW</span>
-                  <FontAwesomeIcon icon={faFeatherAlt} className="story-icon" />
-                  <div className="story-header">
-                    <small className="date">{formatDate(s.date)}</small>
-                    <span className="by">• by </span>
-                    <h3>{s.name}</h3>
-                  </div>
-                  <p className={`story-content ${expandedStories.includes(index) ? 'expanded' : ''}`}>
-                    {expandedStories.includes(index) ? s.story : `${s.story.substring(0, 200)}...`}
-                    {s.story.length > 200 && (
-                      <span className="read-more" onClick={() => toggleStory(index)}>
-                        {expandedStories.includes(index) ? ' Show less' : ' Read more'}
-                      </span>
-                    )}
-                  </p>
-                </li>
-              ))}
+              {stories ? (
+                stories.map((s, index) => (
+                  <li key={index}>
+                    <span className="new-label">NEW</span>
+                    <FontAwesomeIcon icon={faFeatherAlt} className="story-icon" />
+                    <div className="story-header">
+                      <small className="date">{formatDate(s.date)}</small>
+                      <span className="by">• by </span>
+                      <h3>{s.name}</h3>
+                    </div>
+                    <p className={`story-content ${expandedStories.includes(index) ? 'expanded' : ''}`}>
+                      {expandedStories.includes(index) ? s.story : `${s.story.substring(0, 200)}...`}
+                      {s.story.length > 200 && (
+                        <span className="read-more" onClick={() => toggleStory(index)}>
+                          {expandedStories.includes(index) ? ' Show less' : ' Read more'}
+                        </span>
+                      )}
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <p className="loading-message">Loading stories...</p>
+              )}
             </ul>
           </div>
 
@@ -165,8 +198,12 @@ const Stories = () => {
         <div className="stories-sidebar">
           <div className="diaporama-box">
             <h3>Photos</h3>
-            {photos.length > 0 && (
-              <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
+            {photos ? (
+              photos.length > 0 && (
+                <img src={photos[currentSlide].imageUrl} alt="Slideshow" />
+              )
+            ) : (
+              <p className="loading-message">Loading photos...</p>
             )}
           </div>
           <div className="updates-box">
@@ -193,4 +230,3 @@ const Stories = () => {
 };
 
 export default Stories;
-

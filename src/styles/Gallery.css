@@ -347,3 +347,29 @@
 .photos ul li.selected {
   border: 2px solid #d9534f; /* Highlight selected photo */
 }
+
+.loading-message {
+  font-size: 16px;
+  color: #4a2c2a;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.offline-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffcc00;
+  color: #333;
+  text-align: center;
+  padding: 10px;
+  z-index: 1000;
+  font-size: 16px;
+  border-bottom: 1px solid #e6b800;
+}
+
+iframe
+{
+    display: none;
+}
